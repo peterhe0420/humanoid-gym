@@ -37,6 +37,7 @@ from .actor_critic import ActorCritic
 from .rollout_storage import RolloutStorage
 
 class PPO:
+    #A member called ActorCritic in the PPO class
     actor_critic: ActorCritic
     def __init__(self,
                  actor_critic,
@@ -62,20 +63,25 @@ class PPO:
         self.learning_rate = learning_rate
 
         # PPO components
+        #Assign actor critic and move it onto the GPU
         self.actor_critic = actor_critic
         self.actor_critic.to(self.device)
         self.storage = None # initialized later
+        # creates an optimizer that will update the parameters of self.actor_critic using the Adam optimization algorithm
+        # Adam provides Adaptive learning rates + momentum
         self.optimizer = optim.Adam(self.actor_critic.parameters(), lr=learning_rate)
         self.transition = RolloutStorage.Transition()
 
         # PPO parameters
         self.clip_param = clip_param
+        # how many times PPO will iterate over the collected rollout data to optimize the policy and value function before moving on to collect new data
         self.num_learning_epochs = num_learning_epochs
         self.num_mini_batches = num_mini_batches
         self.value_loss_coef = value_loss_coef
         self.entropy_coef = entropy_coef
         self.gamma = gamma
         self.lam = lam
+        # sets the maximum norm for gradient clipping
         self.max_grad_norm = max_grad_norm
         self.use_clipped_value_loss = use_clipped_value_loss
 
@@ -90,7 +96,12 @@ class PPO:
 
     def act(self, obs, critic_obs):
         # Compute the actions and values
+        #sample an action, by giving the actor network an observation obs
+        print("obs is:\n")
+        print(obs)
+        print("\n\n\n\n\n\n\n\n")
         self.transition.actions = self.actor_critic.act(obs).detach()
+        # Evaluate the current status, by giving critic_obs
         self.transition.values = self.actor_critic.evaluate(critic_obs).detach()
         self.transition.actions_log_prob = self.actor_critic.get_actions_log_prob(self.transition.actions).detach()
         self.transition.action_mean = self.actor_critic.action_mean.detach()
@@ -99,7 +110,7 @@ class PPO:
         self.transition.observations = obs
         self.transition.critic_observations = critic_obs
         return self.transition.actions
-    
+
     def process_env_step(self, rewards, dones, infos):
         self.transition.rewards = rewards.clone()
         self.transition.dones = dones
