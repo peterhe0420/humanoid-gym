@@ -1,0 +1,807 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="hr_URDF_1023">
+    <mujoco>
+    <compiler
+      meshdir="meshes/"
+    	balanceinertia="true"
+    	discardvisual="false" />
+    </mujoco>
+  <link
+    name="body">
+    <inertial>
+      <origin
+        xyz="0.0017699 -0.00049125 -0.091608"
+        rpy="0 0 0" />
+      <mass
+        value="20.6588" />
+      <inertia
+        ixx="0.79349"
+        ixy="-6.8856E-05"
+        ixz="0.0024924"
+        iyy="0.47407"
+        iyz="9.4071E-04"
+        izz="0.42063" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://hr_URDF_1023/meshes/body.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://hr_URDF_1023/meshes/body.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="waist">
+    <inertial>
+      <origin
+        xyz="-3.8903E-06 -1.205E-06 -0.10892"
+        rpy="0 0 0" />
+      <mass
+        value="4.2005" />
+      <inertia
+        ixx="0.013362"
+        ixy="-5.5315E-08"
+        ixz="-8.749E-09"
+        iyy="0.011993"
+        iyz="5.536E-08"
+        izz="0.011706" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://hr_URDF_1023/meshes/waist.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://hr_URDF_1023/meshes/waist.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="hip_yaw"
+    type="revolute">
+    <origin
+      xyz="0 -2.1619E-05 -0.333"
+      rpy="0 0 0" />
+    <parent
+      link="body" />
+    <child
+      link="waist" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-3.14"
+      upper="3.14"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="hip1l">
+    <inertial>
+      <origin
+        xyz="-0.0023389 0.091791 -4.9742E-09"
+        rpy="0 0 0" />
+      <mass
+        value="1.1048" />
+      <inertia
+        ixx="0.0024131"
+        ixy="-0.00014305"
+        ixz="1.1542E-11"
+        iyy="0.001598"
+        iyz="6.0435E-11"
+        izz="0.0019103" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://hr_URDF_1023/meshes/hip1l.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://hr_URDF_1023/meshes/hip1l.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="hip_pitch_l"
+    type="revolute">
+    <origin
+      xyz="0 0.08975 -0.152"
+      rpy="0 0 0" />
+    <parent
+      link="waist" />
+    <child
+      link="hip1l" />
+    <axis
+      xyz="0 -1 0" />
+    <limit
+      lower="-0.7854"
+      upper="1.8326"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="hip2l">
+    <inertial>
+      <origin
+        xyz="0.015325 0.0016862 -0.13168"
+        rpy="0 0 0" />
+      <mass
+        value="1.3845" />
+      <inertia
+        ixx="0.0096171"
+        ixy="-1.6582E-07"
+        ixz="-0.00044644"
+        iyy="0.0082904"
+        iyz="0.00018678"
+        izz="0.0030488" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://hr_URDF_1023/meshes/hip2l.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://hr_URDF_1023/meshes/hip2l.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="hip_roll_l"
+    type="revolute">
+    <origin
+      xyz="-0.00725 0.099 0"
+      rpy="0 0 0" />
+    <parent
+      link="hip1l" />
+    <child
+      link="hip2l" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="-0.17453"
+      upper="0.43633"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="hip3l">
+    <inertial>
+      <origin
+        xyz="0.00023116 -0.021094 -0.19664"
+        rpy="0 0 0" />
+      <mass
+        value="3.7995" />
+      <inertia
+        ixx="0.053107"
+        ixy="5.4809E-05"
+        ixz="0.00012206"
+        iyy="0.054306"
+        iyz="-0.0044831"
+        izz="0.0078282" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://hr_URDF_1023/meshes/hip3l.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://hr_URDF_1023/meshes/hip3l.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="knee_yaw_l"
+    type="revolute">
+    <origin
+      xyz="0 0 -0.17"
+      rpy="0 0 0" />
+    <parent
+      link="hip2l" />
+    <child
+      link="hip3l" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.69813"
+      upper="0.69813"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="kneel">
+    <inertial>
+      <origin
+        xyz="0.0053452 -0.00297 -0.14967"
+        rpy="0 0 0" />
+      <mass
+        value="1.3857" />
+      <inertia
+        ixx="0.0089661"
+        ixy="-1.6344E-05"
+        ixz="0.00014923"
+        iyy="0.0090434"
+        iyz="0.0006233"
+        izz="0.0012297" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://hr_URDF_1023/meshes/kneel.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://hr_URDF_1023/meshes/kneel.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="knee_pitch_l"
+    type="revolute">
+    <origin
+      xyz="0 0 -0.31"
+      rpy="0 0 0" />
+    <parent
+      link="hip3l" />
+    <child
+      link="kneel" />
+    <axis
+      xyz="0 -1 0" />
+    <limit
+      lower="-2.36"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="anklel">
+    <inertial>
+      <origin
+        xyz="-5.9166E-09 -1.4565E-08 -2.4425E-15"
+        rpy="0 0 0" />
+      <mass
+        value="0.091683" />
+      <inertia
+        ixx="1.5591E-05"
+        ixy="7.9407E-18"
+        ixz="-4.0111E-11"
+        iyy="5.0081E-06"
+        iyz="2.5565E-11"
+        izz="1.7429E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://hr_URDF_1023/meshes/anklel.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://hr_URDF_1023/meshes/anklel.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="ankle_pitch_l"
+    type="revolute">
+    <origin
+      xyz="0 0 -0.38"
+      rpy="0 0 0" />
+    <parent
+      link="kneel" />
+    <child
+      link="anklel" />
+    <axis
+      xyz="0 -1 0" />
+    <limit
+      lower="-0.43644"
+      upper="1.21087"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="feetl">
+    <inertial>
+      <origin
+        xyz="0.02066 -1.7433E-07 -0.053808"
+        rpy="0 0 0" />
+      <mass
+        value="1.1444" />
+      <inertia
+        ixx="0.0009116"
+        ixy="8.4048E-09"
+        ixz="0.00027066"
+        iyy="0.0049323"
+        iyz="-2.1671E-09"
+        izz="0.0053233" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://hr_URDF_1023/meshes/feetl.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://hr_URDF_1023/meshes/feetl.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="ankle_roll_l"
+    type="revolute">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="anklel" />
+    <child
+      link="feetl" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="-0.43633"
+      upper="0.43633"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="hip1r">
+    <inertial>
+      <origin
+        xyz="-0.0044197 -0.091815 4.9742E-09"
+        rpy="0 0 0" />
+      <mass
+        value="1.1048" />
+      <inertia
+        ixx="0.0024131"
+        ixy="0.00014305"
+        ixz="-1.1542E-11"
+        iyy="0.001598"
+        iyz="6.0435E-11"
+        izz="0.0019103" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://hr_URDF_1023/meshes/hip1r.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://hr_URDF_1023/meshes/hip1r.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="hip_pitch_r"
+    type="revolute">
+    <origin
+      xyz="0.0020762 -0.089726 -0.152"
+      rpy="0 0 0" />
+    <parent
+      link="waist" />
+    <child
+      link="hip1r" />
+    <axis
+      xyz="0 -1 0" />
+    <limit
+      lower="-0.7854"
+      upper="1.8326"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="hip2r">
+    <inertial>
+      <origin
+        xyz="0.015305 -0.001663 -0.1317"
+        rpy="0 0 0" />
+      <mass
+        value="1.3844" />
+      <inertia
+        ixx="0.0096137"
+        ixy="-2.4821E-07"
+        ixz="-0.00044658"
+        iyy="0.0082871"
+        iyz="-0.00018913"
+        izz="0.0030484" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://hr_URDF_1023/meshes/hip2r.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://hr_URDF_1023/meshes/hip2r.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="hip_roll_r"
+    type="revolute">
+    <origin
+      xyz="-0.0093308 -0.099024 0"
+      rpy="0 0 0" />
+    <parent
+      link="hip1r" />
+    <child
+      link="hip2r" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="-0.43633"
+      upper="0.17453"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="hip3r">
+    <inertial>
+      <origin
+        xyz="0.00023118 0.021094 -0.19664"
+        rpy="0 0 0" />
+      <mass
+        value="3.7995" />
+      <inertia
+        ixx="0.053107"
+        ixy="-5.4809E-05"
+        ixz="0.00012206"
+        iyy="0.054306"
+        iyz="0.0044831"
+        izz="0.0078282" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://hr_URDF_1023/meshes/hip3r.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://hr_URDF_1023/meshes/hip3r.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="knee_yaw_r"
+    type="revolute">
+    <origin
+      xyz="0 0 -0.17"
+      rpy="0 0 0" />
+    <parent
+      link="hip2r" />
+    <child
+      link="hip3r" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.69813"
+      upper="0.69813"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="kneer">
+    <inertial>
+      <origin
+        xyz="0.0053451 0.0012199 -0.14967"
+        rpy="0 0 0" />
+      <mass
+        value="1.3857" />
+      <inertia
+        ixx="0.0089662"
+        ixy="1.6342E-05"
+        ixz="0.00014921"
+        iyy="0.0090435"
+        iyz="-0.00062329"
+        izz="0.0012297" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://hr_URDF_1023/meshes/kneer.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://hr_URDF_1023/meshes/kneer.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="knee_pitch_r"
+    type="revolute">
+    <origin
+      xyz="0 0 -0.31"
+      rpy="0 0 0" />
+    <parent
+      link="hip3r" />
+    <child
+      link="kneer" />
+    <axis
+      xyz="0 -1 0" />
+    <limit
+      lower="-2.36"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="ankler">
+    <inertial>
+      <origin
+        xyz="-5.9166E-09 -1.4565E-08 -4.4409E-16"
+        rpy="0 0 0" />
+      <mass
+        value="0.091683" />
+      <inertia
+        ixx="1.5591E-05"
+        ixy="7.958E-18"
+        ixz="-4.0111E-11"
+        iyy="5.0081E-06"
+        iyz="2.5565E-11"
+        izz="1.7429E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://hr_URDF_1023/meshes/ankler.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://hr_URDF_1023/meshes/ankler.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="ankle_pitch_r"
+    type="revolute">
+    <origin
+      xyz="0 -0.00175 -0.38"
+      rpy="0 0 0" />
+    <parent
+      link="kneer" />
+    <child
+      link="ankler" />
+    <axis
+      xyz="0 -1 0" />
+    <limit
+      lower="-0.43644"
+      upper="1.21087"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="feetr">
+    <inertial>
+      <origin
+        xyz="0.02066 -1.745E-07 -0.053808"
+        rpy="0 0 0" />
+      <mass
+        value="1.1444" />
+      <inertia
+        ixx="0.0009116"
+        ixy="8.4237E-09"
+        ixz="0.00027066"
+        iyy="0.0049323"
+        iyz="-2.1807E-09"
+        izz="0.0053233" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://hr_URDF_1023/meshes/feetr.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://hr_URDF_1023/meshes/feetr.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="ankle_roll_r"
+    type="revolute">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="ankler" />
+    <child
+      link="feetr" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="-0.43633"
+      upper="0.43633"
+      effort="0"
+      velocity="0" />
+  </joint>
+</robot>

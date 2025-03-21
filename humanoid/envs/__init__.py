@@ -35,8 +35,10 @@ from .base.legged_robot import LeggedRobot
 
 from .custom.humanoid_config import XBotLCfg, XBotLCfgPPO
 from .custom.humanoid_env import XBotLFreeEnv
-
+from .custom.hr_URDF_1023_config import hr_URDF_1023_Cfg, hr_URDF_1023_PPO
+from .custom.hr_URDF_1023_env import hr_URDF_1023_Env
 from humanoid.utils.task_registry import task_registry
 
 
 task_registry.register( "humanoid_ppo", XBotLFreeEnv, XBotLCfg(), XBotLCfgPPO() )
+task_registry.register( "hr_URDF_1023_ppo", hr_URDF_1023_Env, hr_URDF_1023_Cfg(), hr_URDF_1023_PPO() )
