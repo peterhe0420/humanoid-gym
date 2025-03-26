@@ -89,15 +89,18 @@ class LeggedRobot(BaseTask):
         """
         clip_actions = self.cfg.normalization.clip_actions
         self.actions = torch.clip(actions, -clip_actions, clip_actions).to(self.device)
+        # print("self.actions: ",self.actions,"\n\n")
         # step physics and render each frame
         self.render()
         for _ in range(self.cfg.control.decimation):
             self.torques = self._compute_torques(self.actions).view(self.torques.shape)
+            # print("self.torques: ",self.torques,"\n\n")
             self.gym.set_dof_actuation_force_tensor(self.sim, gymtorch.unwrap_tensor(self.torques))
 
             self.gym.simulate(self.sim)
             if self.device == 'cpu':
                 self.gym.fetch_results(self.sim, True)
+            # print("before gym.refresh_dof_state_tensor\n\n")
             self.gym.refresh_dof_state_tensor(self.sim)
         self.post_physics_step()
 
@@ -129,6 +132,7 @@ class LeggedRobot(BaseTask):
         self.common_step_counter += 1
 
         # prepare quantities
+        # print("self.root_states in def post_physics_step(self):",self.root_states,"\n\n\n")
         self.base_quat[:] = self.root_states[:, 3:7]
         self.base_lin_vel[:] = quat_rotate_inverse(self.base_quat, self.root_states[:, 7:10])
         self.base_ang_vel[:] = quat_rotate_inverse(self.base_quat, self.root_states[:, 10:13])
@@ -183,6 +187,7 @@ class LeggedRobot(BaseTask):
         self._reset_dofs(env_ids)
 
         self._reset_root_states(env_ids)
+        # print("calling self._resample_commands(env_ids) in def reset_idx(self, env_ids): ")
 
         self._resample_commands(env_ids)
 
@@ -210,6 +215,7 @@ class LeggedRobot(BaseTask):
             self.extras["time_outs"] = self.time_out_buf
             
         # fix reset gravity bug
+        # print("self.root_states in def reset_idx(self, env_ids):",self.root_states,"\n\n\n")
         self.base_quat[env_ids] = self.root_states[env_ids, 3:7]
         self.base_euler_xyz = get_euler_xyz_tensor(self.base_quat)
         self.projected_gravity[env_ids] = quat_rotate_inverse(self.base_quat[env_ids], self.gravity_vec[env_ids])
@@ -307,12 +313,15 @@ class LeggedRobot(BaseTask):
         """
         # 
         env_ids = (self.episode_length_buf % int(self.cfg.commands.resampling_time / self.dt)==0).nonzero(as_tuple=False).flatten()
+        # print("calling self._resample_commands(env_ids) in def _post_physics_step_callback(self): ")
         self._resample_commands(env_ids)
         if self.cfg.commands.heading_command:
+            # print("self.base_quat:",self.base_quat,"self.forward_vec",self.forward_vec,"\n\n")
             forward = quat_apply(self.base_quat, self.forward_vec)
+            # print("forward[:, 1]:",forward[:, 1],"forward[:, 0]:",forward[:, 0],"\n\n")
             heading = torch.atan2(forward[:, 1], forward[:, 0])
             self.commands[:, 2] = torch.clip(0.5*wrap_to_pi(self.commands[:, 3] - heading), -1., 1.)
-
+            # print("in if self.cfg.commands.heading_command:, self.commands:",self.commands,"\n\n")
         if self.cfg.terrain.measure_heights:
             self.measured_heights = self._get_heights()
 
@@ -325,17 +334,21 @@ class LeggedRobot(BaseTask):
         Args:
             env_ids (List[int]): Environments ids for which new commands are needed
         """
+        # print("we are in def _resample_commands(self, env_ids): in legged_robot.py")
         self.commands[env_ids, 0] = torch_rand_float(self.command_ranges["lin_vel_x"][0], self.command_ranges["lin_vel_x"][1], (len(env_ids), 1), device=self.device).squeeze(1)
         self.commands[env_ids, 1] = torch_rand_float(self.command_ranges["lin_vel_y"][0], self.command_ranges["lin_vel_y"][1], (len(env_ids), 1), device=self.device).squeeze(1)
         if self.cfg.commands.heading_command:
+            # print("we are in if\n\n")
             self.commands[env_ids, 3] = torch_rand_float(self.command_ranges["heading"][0], self.command_ranges["heading"][1], (len(env_ids), 1), device=self.device).squeeze(1)
         else:
+            # print("we are in else\n\n")
             self.commands[env_ids, 2] = torch_rand_float(self.command_ranges["ang_vel_yaw"][0], self.command_ranges["ang_vel_yaw"][1], (len(env_ids), 1), device=self.device).squeeze(1)
 
         # set small commands to zero
+
         self.commands[env_ids, :2] *= (torch.norm(self.commands[env_ids, :2], dim=1) > 0.2).unsqueeze(1)
 
-
+        # print("self.commands:",self.commands,"\n\n")
 
     def _compute_torques(self, actions):
         """ Compute torques from actions.
@@ -350,10 +363,17 @@ class LeggedRobot(BaseTask):
         """
         # pd controller
         actions_scaled = actions * self.cfg.control.action_scale
+        # print("actions scaled: ", actions_scaled, "\n\n")
         p_gains = self.p_gains
         d_gains = self.d_gains
+        # print("rigid state pointer:",self.gym.acquire_rigid_body_state_tensor(self.sim),"\n")
+        # print("self.default_dof_pos:",self.default_dof_pos, "\nself.dof_pos:", self.dof_pos, "\nself.dof_vel: ", self.dof_vel,"\nself.contact_forces",self.contact_forces,"\nself.rigid_state",self.rigid_state,"self.dof_state",self.dof_state,"\n\n")
+
         torques = p_gains * (actions_scaled + self.default_dof_pos - self.dof_pos) - d_gains * self.dof_vel
+        # print("torques no clip: ", torques, "\n\n")
         return torch.clip(torques, -self.torque_limits, self.torque_limits)
+        # return torques
+
 
     
     def _reset_dofs(self, env_ids):
@@ -435,9 +455,15 @@ class LeggedRobot(BaseTask):
         """ Initialize torch tensors which will contain simulation states and processed quantities
         """
         # get gym GPU state tensors
+        # returns a pointer to a GPU or CPU tensor containing the root(first rigid part in the urdf) state of each actor in the simulation
         actor_root_state = self.gym.acquire_actor_root_state_tensor(self.sim)
         dof_state_tensor = self.gym.acquire_dof_state_tensor(self.sim)
         net_contact_forces = self.gym.acquire_net_contact_force_tensor(self.sim)
+        # returns a pointer (handle) to a GPU or CPU tensor that contains the rigid body states
+        #0:3	pos → x, y, z position
+        #3:7	quat → w, x, y, z orientation (quaternion)
+        #7:10	lin_vel → x, y, z linear velocity
+        #10:13	ang_vel → x, y, z angular velocity
         rigid_body_state = self.gym.acquire_rigid_body_state_tensor(self.sim)
 
         self.gym.refresh_dof_state_tensor(self.sim)
@@ -596,7 +622,9 @@ class LeggedRobot(BaseTask):
         """
         asset_path = self.cfg.asset.file.format(LEGGED_GYM_ROOT_DIR=LEGGED_GYM_ROOT_DIR)
         asset_root = os.path.dirname(asset_path)
+        print("asset_root:\n",asset_root,"\n")
         asset_file = os.path.basename(asset_path)
+        print("asset_file:\n",asset_file,"\n")
 
         asset_options = gymapi.AssetOptions()
         asset_options.default_dof_drive_mode = self.cfg.asset.default_dof_drive_mode
@@ -624,13 +652,15 @@ class LeggedRobot(BaseTask):
 
         # save body names from the asset
         body_names = self.gym.get_asset_rigid_body_names(robot_asset)
+        print("body_names:\n",body_names,"\n")
         self.dof_names = self.gym.get_asset_dof_names(robot_asset)
         self.num_bodies = len(body_names)
         self.num_dofs = len(self.dof_names)
-        print("feet_names "+self.cfg.asset.foot_name+"\n\n\n\n")
+        print("feet_name "+self.cfg.asset.foot_name+"\n\n\n\n")
         print("knee_name "+self.cfg.asset.knee_name+"\n\n\n\n")
 
         feet_names = [s for s in body_names if self.cfg.asset.foot_name in s]
+        print("feet_names ",feet_names,"\n\n\n\n")
         knee_names = [s for s in body_names if self.cfg.asset.knee_name in s]
         penalized_contact_names = []
         for name in self.cfg.asset.penalize_contacts_on:

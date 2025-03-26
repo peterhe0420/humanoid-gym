@@ -13,9 +13,11 @@ if [ -n "$existing_container" ]; then
   sudo docker rm "$existing_container"
 fi
 
-# 运行新的容器
-sudo docker run -it --privileged --net=host\
+
+# 运行新的容器，增加 humanoid_gym 文件夹挂载
+sudo docker run -it --privileged --net=host \
   -v /home/lee:/home/lee \
+  -v /home/lab/catkin_ws/src/humanoid-gym/:/home/humanoid_gym \
   --device=/dev/dri \
   --group-add video \
   --volume=/tmp/.X11-unix:/tmp/.X11-unix \

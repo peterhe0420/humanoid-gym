@@ -97,9 +97,17 @@ class PPO:
     def act(self, obs, critic_obs):
         # Compute the actions and values
         #sample an action, by giving the actor network an observation obs
-        print("obs is:\n")
-        print(obs)
-        print("\n\n\n\n\n\n\n\n")
+        torch.set_printoptions(threshold=float('inf'))
+        # print("obs is:\n")
+        # print(obs)
+        # print(obs.shape)
+
+        # print("sin_pos:", obs[1].sin_pos,"\n")
+        # print("cos_pos:", obs[1].cos_pos,"\n")
+        # print("commands raw:", self.commands[:, :3],"\n")
+        # print("commands scaled:", self.commands[:, :3] * self.commands_scale,"\n")
+
+        # print("\n\n\n\n\n\n\n\n")
         self.transition.actions = self.actor_critic.act(obs).detach()
         # Evaluate the current status, by giving critic_obs
         self.transition.values = self.actor_critic.evaluate(critic_obs).detach()

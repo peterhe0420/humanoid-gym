@@ -45,7 +45,7 @@ from torch.utils.tensorboard import SummaryWriter
 class OnPolicyRunner:
 
     def __init__(self, env: VecEnv, train_cfg, log_dir=None, device="cpu"):
-
+        print("we are in OnPolicyRunner class constructor\n\n")
         self.cfg = train_cfg["runner"]
         self.alg_cfg = train_cfg["algorithm"]
         self.policy_cfg = train_cfg["policy"]
@@ -63,15 +63,18 @@ class OnPolicyRunner:
             num_critic_obs = self.env.num_privileged_obs
         else:
             num_critic_obs = self.env.num_obs
+        print("self.cfg[policy_class_name]:",self.cfg["policy_class_name"],"\n\n\n")
         actor_critic_class = eval(self.cfg["policy_class_name"])  # ActorCritic
         actor_critic: ActorCritic = actor_critic_class(
             self.env.num_obs, num_critic_obs, self.env.num_actions, **self.policy_cfg
         ).to(self.device)
+        # print("alg_class = eval(self.cfg[\n\n\n")
         alg_class = eval(self.cfg["algorithm_class_name"])  # PPO
+        # print("alg_class = eval(self.cfg[algorithm_class_name])\n\n\n")
         self.alg: PPO = alg_class(actor_critic, device=self.device, **self.alg_cfg)
         self.num_steps_per_env = self.cfg["num_steps_per_env"]
         self.save_interval = self.cfg["save_interval"]
-
+        # print("before init_storage")
         # init storage and model
         self.alg.init_storage(
             self.env.num_envs,
@@ -80,6 +83,7 @@ class OnPolicyRunner:
             [self.env.num_privileged_obs],
             [self.env.num_actions],
         )
+        # print("before log init")
 
         # Log
         self.log_dir = log_dir
@@ -87,24 +91,29 @@ class OnPolicyRunner:
         self.tot_timesteps = 0
         self.tot_time = 0
         self.current_learning_iteration = 0
-
+        # print("before self.env.reset",self.env.reset,"\n\n")
+        #LeggedRobot.reset()
         _, _ = self.env.reset()
+        # print("after self.env.reset\n\n\n")
 
     def learn(self, num_learning_iterations, init_at_random_ep_len=False):
         # initialize writer
         if self.log_dir is not None and self.writer is None:
             wandb.init(
-                project="XBot",
+                project="hr_URDF_1023",
                 sync_tensorboard=True,
                 name=self.wandb_run_name,
                 config=self.all_cfg,
             )
+            print("attached SummaryWriter here\n")
             self.writer = SummaryWriter(log_dir=self.log_dir, flush_secs=10)
         if init_at_random_ep_len:
             self.env.episode_length_buf = torch.randint_like(
                 self.env.episode_length_buf, high=int(self.env.max_episode_length)
             )
+            # print(self.env)
         obs = self.env.get_observations()
+        # print("obs:",obs,"\n\n")
         privileged_obs = self.env.get_privileged_observations()
         critic_obs = privileged_obs if privileged_obs is not None else obs
         obs, critic_obs = obs.to(self.device), critic_obs.to(self.device)
@@ -177,6 +186,7 @@ class OnPolicyRunner:
         )
 
     def log(self, locs, width=80, pad=35):
+        # print("we are logging, self.logger: ",self.writer,"\n\n")
         self.tot_timesteps += self.num_steps_per_env * self.env.num_envs
         self.tot_time += locs["collection_time"] + locs["learn_time"]
         iteration_time = locs["collection_time"] + locs["learn_time"]

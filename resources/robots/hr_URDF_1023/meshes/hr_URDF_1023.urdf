@@ -4,12 +4,12 @@
      For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
 <robot
   name="hr_URDF_1023">
-    <mujoco>
+    <!-- <mujoco>
     <compiler
-      meshdir="meshes/"
+      meshdir="../meshes/"
     	balanceinertia="true"
     	discardvisual="false" />
-    </mujoco>
+    </mujoco> -->
   <link
     name="body">
     <inertial>
@@ -32,7 +32,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hr_URDF_1023/meshes/body.STL" />
+          filename="../meshes/body.STL" />
       </geometry>
       <material
         name="">
@@ -42,13 +42,21 @@
     </visual>
     <collision>
       <origin
+        xyz="0 0. 0"
+        rpy="0 0 0" />
+      <geometry>
+        <box size="0.4 0.4 0.4"/>
+      </geometry>
+    </collision>
+    <!-- <collision>
+      <origin
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hr_URDF_1023/meshes/body.STL" />
+          filename="../meshes/body.STL" />
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <link
     name="waist">
@@ -72,7 +80,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hr_URDF_1023/meshes/waist.STL" />
+          filename="../meshes/waist.STL" />
       </geometry>
       <material
         name="">
@@ -86,13 +94,13 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hr_URDF_1023/meshes/waist.STL" />
+          filename="../meshes/waist.STL" />
       </geometry>
     </collision>
   </link>
   <joint
     name="hip_yaw"
-    type="revolute">
+    type="fixed">
     <origin
       xyz="0 -2.1619E-05 -0.333"
       rpy="0 0 0" />
@@ -105,8 +113,8 @@
     <limit
       lower="-3.14"
       upper="3.14"
-      effort="0"
-      velocity="0" />
+      effort="250"
+      velocity="12" />
   </joint>
   <link
     name="hip1l">
@@ -130,7 +138,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hr_URDF_1023/meshes/hip1l.STL" />
+          filename="../meshes/hip1l.STL" />
       </geometry>
       <material
         name="">
@@ -144,7 +152,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hr_URDF_1023/meshes/hip1l.STL" />
+          filename="../meshes/hip1l.STL" />
       </geometry>
     </collision>
   </link>
@@ -162,9 +170,9 @@
       xyz="0 -1 0" />
     <limit
       lower="-0.7854"
-      upper="1.8326"
-      effort="0"
-      velocity="0" />
+      upper="1.7"
+      effort="250"
+      velocity="10" />
   </joint>
   <link
     name="hip2l">
@@ -188,7 +196,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hr_URDF_1023/meshes/hip2l.STL" />
+          filename="../meshes/hip2l.STL" />
       </geometry>
       <material
         name="">
@@ -202,7 +210,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hr_URDF_1023/meshes/hip2l.STL" />
+          filename="../meshes/hip2l.STL" />
       </geometry>
     </collision>
   </link>
@@ -221,8 +229,8 @@
     <limit
       lower="-0.17453"
       upper="0.43633"
-      effort="0"
-      velocity="0" />
+      effort="250"
+      velocity="10" />
   </joint>
   <link
     name="hip3l">
@@ -246,7 +254,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hr_URDF_1023/meshes/hip3l.STL" />
+          filename="../meshes/hip3l.STL" />
       </geometry>
       <material
         name="">
@@ -260,12 +268,12 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hr_URDF_1023/meshes/hip3l.STL" />
+          filename="../meshes/hip3l.STL" />
       </geometry>
     </collision>
   </link>
   <joint
-    name="knee_yaw_l"
+    name="hip_yaw_l"
     type="revolute">
     <origin
       xyz="0 0 -0.17"
@@ -279,8 +287,8 @@
     <limit
       lower="-0.69813"
       upper="0.69813"
-      effort="0"
-      velocity="0" />
+      effort="250"
+      velocity="10" />
   </joint>
   <link
     name="kneel">
@@ -304,7 +312,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hr_URDF_1023/meshes/kneel.STL" />
+          filename="../meshes/kneel.STL" />
       </geometry>
       <material
         name="">
@@ -318,7 +326,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hr_URDF_1023/meshes/kneel.STL" />
+          filename="../meshes/kneel.STL" />
       </geometry>
     </collision>
   </link>
@@ -335,10 +343,10 @@
     <axis
       xyz="0 -1 0" />
     <limit
-      lower="-2.36"
+      lower="-2"
       upper="0"
-      effort="0"
-      velocity="0" />
+      effort="250"
+      velocity="12" />
   </joint>
   <link
     name="anklel">
@@ -362,7 +370,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hr_URDF_1023/meshes/anklel.STL" />
+          filename="../meshes/anklel.STL" />
       </geometry>
       <material
         name="">
@@ -376,7 +384,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hr_URDF_1023/meshes/anklel.STL" />
+          filename="../meshes/anklel.STL" />
       </geometry>
     </collision>
   </link>
@@ -395,8 +403,8 @@
     <limit
       lower="-0.43644"
       upper="1.21087"
-      effort="0"
-      velocity="0" />
+      effort="100"
+      velocity="12" />
   </joint>
   <link
     name="feetl">
@@ -420,7 +428,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hr_URDF_1023/meshes/feetl.STL" />
+          filename="../meshes/feetl.STL" />
       </geometry>
       <material
         name="">
@@ -434,7 +442,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hr_URDF_1023/meshes/feetl.STL" />
+          filename="../meshes/feetl.STL" />
       </geometry>
     </collision>
   </link>
@@ -453,8 +461,8 @@
     <limit
       lower="-0.43633"
       upper="0.43633"
-      effort="0"
-      velocity="0" />
+      effort="100"
+      velocity="12" />
   </joint>
   <link
     name="hip1r">
@@ -478,7 +486,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hr_URDF_1023/meshes/hip1r.STL" />
+          filename="../meshes/hip1r.STL" />
       </geometry>
       <material
         name="">
@@ -492,7 +500,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hr_URDF_1023/meshes/hip1r.STL" />
+          filename="../meshes/hip1r.STL" />
       </geometry>
     </collision>
   </link>
@@ -510,9 +518,9 @@
       xyz="0 -1 0" />
     <limit
       lower="-0.7854"
-      upper="1.8326"
-      effort="0"
-      velocity="0" />
+      upper="1.7"
+      effort="250"
+      velocity="10" />
   </joint>
   <link
     name="hip2r">
@@ -536,7 +544,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hr_URDF_1023/meshes/hip2r.STL" />
+          filename="../meshes/hip2r.STL" />
       </geometry>
       <material
         name="">
@@ -550,7 +558,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hr_URDF_1023/meshes/hip2r.STL" />
+          filename="../meshes/hip2r.STL" />
       </geometry>
     </collision>
   </link>
@@ -569,8 +577,8 @@
     <limit
       lower="-0.43633"
       upper="0.17453"
-      effort="0"
-      velocity="0" />
+      effort="250"
+      velocity="10" />
   </joint>
   <link
     name="hip3r">
@@ -594,7 +602,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hr_URDF_1023/meshes/hip3r.STL" />
+          filename="../meshes/hip3r.STL" />
       </geometry>
       <material
         name="">
@@ -608,12 +616,12 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hr_URDF_1023/meshes/hip3r.STL" />
+          filename="../meshes/hip3r.STL" />
       </geometry>
     </collision>
   </link>
   <joint
-    name="knee_yaw_r"
+    name="hip_yaw_r"
     type="revolute">
     <origin
       xyz="0 0 -0.17"
@@ -627,8 +635,8 @@
     <limit
       lower="-0.69813"
       upper="0.69813"
-      effort="0"
-      velocity="0" />
+      effort="250"
+      velocity="10" />
   </joint>
   <link
     name="kneer">
@@ -652,7 +660,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hr_URDF_1023/meshes/kneer.STL" />
+          filename="../meshes/kneer.STL" />
       </geometry>
       <material
         name="">
@@ -666,7 +674,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hr_URDF_1023/meshes/kneer.STL" />
+          filename="../meshes/kneer.STL" />
       </geometry>
     </collision>
   </link>
@@ -683,10 +691,10 @@
     <axis
       xyz="0 -1 0" />
     <limit
-      lower="-2.36"
+      lower="-2"
       upper="0"
-      effort="0"
-      velocity="0" />
+      effort="250"
+      velocity="10" />
   </joint>
   <link
     name="ankler">
@@ -710,7 +718,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hr_URDF_1023/meshes/ankler.STL" />
+          filename="../meshes/ankler.STL" />
       </geometry>
       <material
         name="">
@@ -724,7 +732,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hr_URDF_1023/meshes/ankler.STL" />
+          filename="../meshes/ankler.STL" />
       </geometry>
     </collision>
   </link>
@@ -743,8 +751,8 @@
     <limit
       lower="-0.43644"
       upper="1.21087"
-      effort="0"
-      velocity="0" />
+      effort="100"
+      velocity="12" />
   </joint>
   <link
     name="feetr">
@@ -768,7 +776,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hr_URDF_1023/meshes/feetr.STL" />
+          filename="../meshes/feetr.STL" />
       </geometry>
       <material
         name="">
@@ -782,7 +790,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hr_URDF_1023/meshes/feetr.STL" />
+          filename="../meshes/feetr.STL" />
       </geometry>
     </collision>
   </link>
@@ -801,7 +809,7 @@
     <limit
       lower="-0.43633"
       upper="0.43633"
-      effort="0"
-      velocity="0" />
+      effort="100"
+      velocity="12" />
   </joint>
 </robot>

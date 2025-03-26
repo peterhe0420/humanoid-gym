@@ -88,11 +88,13 @@ class TaskRegistry():
         if env_cfg is None:
             # load config files
             env_cfg, _ = self.get_cfgs(name)
+            print("env_cfg: ", env_cfg,"\n\n")
         # override cfg from args (if specified)
         env_cfg, _ = update_cfg_from_args(env_cfg, None, args)
         set_seed(env_cfg.seed)
         # parse sim params (convert to dict first)
         sim_params = {"sim": class_to_dict(env_cfg.sim)}
+        print("class_to_dict(env_cfg.sim):\n",class_to_dict(env_cfg.sim),"\n\n")
         sim_params = parse_sim_params(args, sim_params)
         env = task_class(   cfg=env_cfg,
                             sim_params=sim_params,
@@ -137,20 +139,29 @@ class TaskRegistry():
         _, train_cfg = update_cfg_from_args(None, train_cfg, args)
 
         if log_root=="default":
+            print("log_root is default\n")
             log_root = os.path.join(LEGGED_GYM_ROOT_DIR, 'logs', train_cfg.runner.experiment_name)
             log_dir = os.path.join(log_root, datetime.now().strftime('%b%d_%H-%M-%S') + '_' + train_cfg.runner.run_name)
+            print("log_dir: ", log_dir)
         elif log_root is None:
+            print("log_root is None\n")
             log_dir = None
         else:
             log_dir = os.path.join(log_root, datetime.now().strftime('%b%d_%H-%M-%S') + '_' + train_cfg.runner.run_name)
-        
+            print("log_dir: ",log_dir)
+
         train_cfg_dict = class_to_dict(train_cfg)
         env_cfg_dict = class_to_dict(self.env_cfg_for_wandb)
         all_cfg = {**train_cfg_dict, **env_cfg_dict}
-        
+
+        # print("runner_class = eval(train_cfg_dict\n\n")
         runner_class = eval(train_cfg_dict["runner_class_name"])
+        # print("runner = runner_class(env, all_cfg,\n\n\n")
         runner = runner_class(env, all_cfg, log_dir, device=args.rl_device)
+        # print("runner:",runner,"\n\n\n")
+
         #save resume path before creating a new log_dir
+        # print("finished runner class\n")
         resume = train_cfg.runner.resume
         if resume:
             # load previously trained model

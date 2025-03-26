@@ -75,10 +75,11 @@ class hr_URDF_1023_Env(LeggedRobot):
     '''
     def __init__(self, cfg: LeggedRobotCfg, sim_params, physics_engine, sim_device, headless):
         super().__init__(cfg, sim_params, physics_engine, sim_device, headless)
-        self.last_feet_z = 0.05
+        self.last_feet_z = 0.15
         self.feet_height = torch.zeros((self.num_envs, 2), device=self.device)
         self.reset_idx(torch.tensor(range(self.num_envs), device=self.device))
         self.compute_observations()
+        # print("observation after init\n",self.compute_observations(),"\n\n")
 
     def _push_robots(self):
         """ Random pushes the robots. Emulates an impulse by setting a randomized base velocity. 
@@ -130,14 +131,14 @@ class hr_URDF_1023_Env(LeggedRobot):
         scale_2 = 2 * scale_1
         # left foot stance phase set to default joint pos
         sin_pos_l[sin_pos_l > 0] = 0
-        self.ref_dof_pos[:, 1] = -sin_pos_l * scale_1#leg pitch
-        self.ref_dof_pos[:, 4] = sin_pos_l * scale_2#knee joint
-        self.ref_dof_pos[:, 5] = -sin_pos_l * scale_1#ankle pitch
+        self.ref_dof_pos[:, 0] = -sin_pos_l * scale_1 + self.cfg.init_state.default_joint_angles['hip_pitch_l']#leg pitch
+        self.ref_dof_pos[:, 3] = sin_pos_l * scale_2 + self.cfg.init_state.default_joint_angles['knee_pitch_l']#knee joint
+        self.ref_dof_pos[:, 4] = -sin_pos_l * scale_1 + self.cfg.init_state.default_joint_angles['ankle_pitch_l']#ankle pitch
         # right foot stance phase set to default joint pos
         sin_pos_r[sin_pos_r < 0] = 0
-        self.ref_dof_pos[:, 7] = -sin_pos_r * scale_1
-        self.ref_dof_pos[:, 10] = sin_pos_r * scale_2
-        self.ref_dof_pos[:, 11] = -sin_pos_r * scale_1
+        self.ref_dof_pos[:, 6] = sin_pos_r * scale_1+ self.cfg.init_state.default_joint_angles['hip_pitch_r']
+        self.ref_dof_pos[:, 9] = -sin_pos_r * scale_2+ self.cfg.init_state.default_joint_angles['knee_pitch_r']
+        self.ref_dof_pos[:, 10] = sin_pos_r * scale_1+ self.cfg.init_state.default_joint_angles['ankle_pitch_r']
         # Double support phase
         self.ref_dof_pos[torch.abs(sin_pos) < 0.1] = 0
 
@@ -180,11 +181,11 @@ class hr_URDF_1023_Env(LeggedRobot):
         self.add_noise = self.cfg.noise.add_noise
         noise_scales = self.cfg.noise.noise_scales
         noise_vec[0: 5] = 0.  # commands
-        noise_vec[5: 18] = noise_scales.dof_pos * self.obs_scales.dof_pos
-        noise_vec[18: 31] = noise_scales.dof_vel * self.obs_scales.dof_vel
-        noise_vec[31: 44] = 0.  # previous actions
-        noise_vec[44: 47] = noise_scales.ang_vel * self.obs_scales.ang_vel   # ang vel
-        noise_vec[47: 50] = noise_scales.quat * self.obs_scales.quat         # euler x,y
+        noise_vec[5: 17] = noise_scales.dof_pos * self.obs_scales.dof_pos
+        noise_vec[17: 29] = noise_scales.dof_vel * self.obs_scales.dof_vel
+        noise_vec[29: 41] = 0.  # previous actions
+        noise_vec[41: 44] = noise_scales.ang_vel * self.obs_scales.ang_vel  # ang vel
+        noise_vec[44: 47] = noise_scales.quat * self.obs_scales.quat  # euler x,y
         return noise_vec
 
 
@@ -209,7 +210,9 @@ class hr_URDF_1023_Env(LeggedRobot):
 
         stance_mask = self._get_gait_phase()
         contact_mask = self.contact_forces[:, self.feet_indices, 2] > 5.
-
+        # print("self.commands: ",self.commands,"\n")
+        # print("self.commands_scale: ", self.commands_scale, "\n")
+        # print("commands scaled:: ", self.commands[:, :3] * self.commands_scale, "\n")
         self.command_input = torch.cat(
             (sin_pos, cos_pos, self.commands[:, :3] * self.commands_scale), dim=1)
         
@@ -221,10 +224,10 @@ class hr_URDF_1023_Env(LeggedRobot):
         self.privileged_obs_buf = torch.cat((
             self.command_input,  # 2 + 3
             (self.dof_pos - self.default_joint_pd_target) * \
-            self.obs_scales.dof_pos,  # 13
-            self.dof_vel * self.obs_scales.dof_vel,  # 13
-            self.actions,  # 13
-            diff,  # 13
+            self.obs_scales.dof_pos,  # 12
+            self.dof_vel * self.obs_scales.dof_vel,  # 12
+            self.actions,  # 12
+            diff,  # 12
             self.base_lin_vel * self.obs_scales.lin_vel,  # 3
             self.base_ang_vel * self.obs_scales.ang_vel,  # 3
             self.base_euler_xyz * self.obs_scales.quat,  # 3
@@ -235,12 +238,18 @@ class hr_URDF_1023_Env(LeggedRobot):
             stance_mask,  # 2
             contact_mask,  # 2
         ), dim=-1)
+        # print("command_input:", self.command_input,"\n")
+        # print("q:", q,"\n")
+        # print("dq:", dq,"\n")
+        # print("actions:", self.actions,"\n")
+        # print("base_ang_vel * scale:", self.base_ang_vel * self.obs_scales.ang_vel,"\n")
+        # print("base_euler_xyz * scale:", self.base_euler_xyz * self.obs_scales.quat,"\n")
 
         obs_buf = torch.cat((
             self.command_input,  # 5 = 2D(sin cos) + 3D(vel_x, vel_y, aug_vel_yaw)
-            q,    # 13D
-            dq,  # 13D
-            self.actions,   # 13D
+            q,    # 12D
+            dq,  # 12D
+            self.actions,   # 12D
             self.base_ang_vel * self.obs_scales.ang_vel,  # 3
             self.base_euler_xyz * self.obs_scales.quat,  # 3
         ), dim=-1)
@@ -367,8 +376,8 @@ class hr_URDF_1023_Env(LeggedRobot):
         on penalizing deviation in yaw and roll directions. Excludes yaw and roll from the main penalty.
         """
         joint_diff = self.dof_pos - self.default_joint_pd_target
-        left_yaw_roll = joint_diff[:, 2:4]
-        right_yaw_roll = joint_diff[:, 8: 10]
+        left_yaw_roll = joint_diff[:, 1:3]
+        right_yaw_roll = joint_diff[:, 7: 9]
         yaw_roll = torch.norm(left_yaw_roll, dim=1) + torch.norm(right_yaw_roll, dim=1)
         yaw_roll = torch.clamp(yaw_roll - 0.1, 0, 50)
         return torch.exp(-yaw_roll * 100) - 0.01 * torch.norm(joint_diff, dim=1)
@@ -380,12 +389,12 @@ class hr_URDF_1023_Env(LeggedRobot):
         of its feet when they are in contact with the ground.
         """
         stance_mask = self._get_gait_phase()
-        print(self.feet_indices)
-        print("abcde \n\n\n\n\n\n")
+        # print(self.feet_indices)
+        # print("abcde \n\n\n\n\n\n")
         measured_heights = torch.sum(
             self.rigid_state[:, self.feet_indices, 2] * stance_mask, dim=1) / torch.sum(stance_mask, dim=1)
-        print(self.feet_indices)
-        print("\n\n\n\n\n\n")
+        # print(self.feet_indices)
+        # print("\n\n\n\n\n\n")
         base_height = self.root_states[:, 2] - (measured_heights - 0.05)
         return torch.exp(-torch.abs(base_height - self.cfg.rewards.base_height_target) * 100)
 
@@ -544,3 +553,7 @@ class hr_URDF_1023_Env(LeggedRobot):
             self.actions + self.last_last_actions - 2 * self.last_actions), dim=1)
         term_3 = 0.05 * torch.sum(torch.abs(self.actions), dim=1)
         return term_1 + term_2 + term_3
+
+    # def _reward_leg_yaw(self):
+    #
+    #     return 0

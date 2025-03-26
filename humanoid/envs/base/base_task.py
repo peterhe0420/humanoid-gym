@@ -69,6 +69,10 @@ class BaseTask():
         torch._C._jit_set_profiling_executor(False)
 
         # allocate buffers
+        # print("self.num_envs\n")
+        # print(self.num_envs)
+        # print("self.num_obs\n")
+        # print(self.num_obs)
         self.obs_buf = torch.zeros(
             self.num_envs, self.num_obs, device=self.device, dtype=torch.float)
         self.rew_buf = torch.zeros(
@@ -125,6 +129,7 @@ class BaseTask():
             self.camera_handle = camera_handle
 
     def get_observations(self):
+        # print("we are in     def get_observations(self):\n\n\n\n\n\n")
         return self.obs_buf
 
     def get_privileged_observations(self):

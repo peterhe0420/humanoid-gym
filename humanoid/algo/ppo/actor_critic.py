@@ -123,9 +123,9 @@ class ActorCritic(nn.Module):
         # print(observations)
         # print("\n\n\n\n\n\n\n\n")
         mean = self.actor(observations)
-        print("mean is:\n")
-        print(mean)
-        print("\n\n\n\n\n\n\n\n")
+        # print("mean is:\n")
+        # print(mean)
+        # print("\n\n\n\n\n\n\n\n")
         #The mean*0 here is to make sure mean and variance have the same size, so we did this on purpose
         self.distribution = Normal(mean, mean*0. + self.std)
     #Samples an action from the distribution(during exploration/training)

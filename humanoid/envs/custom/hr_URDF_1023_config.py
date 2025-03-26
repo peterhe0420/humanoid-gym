@@ -39,11 +39,11 @@ class hr_URDF_1023_Cfg(LeggedRobotCfg):
         # change the observation dim
         frame_stack = 15
         c_frame_stack = 3
-        num_single_obs = 50
+        num_single_obs = 47
         num_observations = int(frame_stack * num_single_obs)
-        single_num_privileged_obs = 77
+        single_num_privileged_obs = 73
         num_privileged_obs = int(c_frame_stack * single_num_privileged_obs)
-        num_actions = 13
+        num_actions = 12
         num_envs = 4096
         episode_length_s = 24     # episode length in seconds
         use_ref_actions = False   # speed up training by using reference actions
@@ -52,17 +52,17 @@ class hr_URDF_1023_Cfg(LeggedRobotCfg):
         # safety factors
         pos_limit = 1.0
         vel_limit = 1.0
-        torque_limit = 0.85
+        torque_limit = 1
 
     class asset(LeggedRobotCfg.asset):
         file = '{LEGGED_GYM_ROOT_DIR}/resources/robots/hr_URDF_1023/urdf/hr_URDF_1023.urdf'
 
         name = "hr_URDF_1023"
-        foot_name = "ankle"
+        foot_name = "feet"
         knee_name = "knee"
 
-        terminate_after_contacts_on = ['base_link']
-        penalize_contacts_on = ["base_link"]
+        terminate_after_contacts_on = ['body']
+        penalize_contacts_on = ["body"]
         self_collisions = 0  # 1 to disable, 0 to enable...bitwise filter
         flip_visual_attachments = False
         replace_cylinder_with_capsule = False
@@ -99,38 +99,75 @@ class hr_URDF_1023_Cfg(LeggedRobotCfg):
 
 ############################Need to make sure accurate##############################
     class init_state(LeggedRobotCfg.init_state):
-        pos = [0.0, 0.0, 1.33]
+        pos = [0.0, 0.0, 1.45]
 
+        # default_joint_angles = {  # = target angles [rad] when action = 0.0
+        #     # 'hip_yaw': 0.,
+        #
+        #     'hip_pitch_l': 0.223,
+        #     'hip_roll_l': 0.,
+        #     'hip_yaw_l': 0.,
+        #     'knee_pitch_l': -0.425,
+        #     'ankle_pitch_l': 0.23,
+        #     'ankle_roll_l': 0.,
+        #
+        #     'hip_pitch_r': 0.223,
+        #     'hip_roll_r': 0.,
+        #     'hip_yaw_r': 0.,
+        #     'knee_pitch_r': -0.425,
+        #     'ankle_pitch_r': 0.23,
+        #     'ankle_roll_r': 0.,
+        # }
         default_joint_angles = {  # = target angles [rad] when action = 0.0
-            'hip_yaw': 0.,
+            # 'hip_yaw': 0.,
 
-            'hip_pitch_l': 0.223,
+            'hip_pitch_l': 0.38,
             'hip_roll_l': 0.,
-            'knee_yaw_l': 0.,
-            'knee_pitch_l': -0.425,
-            'ankle_pitch_l': 0.157,
+            'hip_yaw_l': 0.,
+            'knee_pitch_l': -0.85,
+            'ankle_pitch_l': 0.42,
             'ankle_roll_l': 0.,
 
-            'hip_pitch_r': 0.223,
+            'hip_pitch_r': 0.38,
             'hip_roll_r': 0.,
-            'knee_yaw_r': 0.,
-            'knee_pitch_r': -0.425,
-            'ankle_pitch_r': 0.157,
+            'hip_yaw_r': 0.,
+            'knee_pitch_r': -0.85,
+            'ankle_pitch_r': 0.42,
             'ankle_roll_r': 0.,
         }
+        # default_joint_angles = {  # = target angles [rad] when action = 0.0
+        #     # 'hip_yaw': 0.,
+        #
+        #     'hip_pitch_l': 0,
+        #     'hip_roll_l': 0.,
+        #     'hip_yaw_l': 0.,
+        #     'knee_pitch_l': 0,
+        #     'ankle_pitch_l': 0,
+        #     'ankle_roll_l': 0.,
+        #
+        #     'hip_pitch_r': 0,
+        #     'hip_roll_r': 0.,
+        #     'hip_yaw_r': 0.,
+        #     'knee_pitch_r': 0,
+        #     'ankle_pitch_r': 0,
+        #     'ankle_roll_r': 0.,
+        # }
 
 ############################Need to look into##############################
     class control(LeggedRobotCfg.control):
         # PD Drive parameters:
         # stiffness = {'leg_roll': 200.0, 'leg_pitch': 350.0, 'leg_yaw': 200.0,
         #              'knee': 350.0, 'ankle': 15}
-        stiffness = {'hip_yaw': 5000.0, 'hip_pitch': 1000.0, 'hip_roll': 1000.0,
-                     'knee_yaw': 1000.0, 'knee_pitch': 2000, 'ankle_pitch': 900, 'ankle_roll': 900}
+        # stiffness = {'hip_yaw': 5000.0, 'hip_pitch': 1000.0, 'hip_roll': 1000.0,
+        #              'knee_yaw': 1000.0, 'knee_pitch': 2000, 'ankle_pitch': 900, 'ankle_roll': 900}
+        stiffness = {'hip_pitch': 350.0, 'hip_roll': 250.0,
+                     'hip_yaw': 200.0, 'knee_pitch': 350, 'ankle_pitch': 20, 'ankle_roll': 20}
         # damping = {'leg_roll': 10, 'leg_pitch': 10, 'leg_yaw':
         #            10, 'knee': 10, 'ankle': 10}
-        damping = {'hip_yaw': 800.0, 'hip_pitch': 280.0, 'hip_roll': 280.0,
-                     'knee_yaw': 280.0, 'knee_pitch': 200, 'ankle_pitch': 180, 'ankle_roll': 180}
-
+        # damping = {'hip_yaw': 800.0, 'hip_pitch': 280.0, 'hip_roll': 280.0,
+        #              'knee_yaw': 280.0, 'knee_pitch': 200, 'ankle_pitch': 180, 'ankle_roll': 180}
+        damping = {'hip_pitch': 40.0, 'hip_roll': 40.0,
+                     'hip_yaw': 40.0, 'knee_pitch': 40, 'ankle_pitch': 6, 'ankle_roll': 6}
         # action scale: target angle = actionScale * action + defaultAngle
         action_scale = 0.25
         # decimation: Number of control action updates @ sim DT per policy DT
@@ -181,18 +218,18 @@ class hr_URDF_1023_Cfg(LeggedRobotCfg):
             heading = [-3.14, 3.14]
 
     class rewards:
-        base_height_target = 0.89
-        min_dist = 0.2
+        base_height_target = 1.45
+        min_dist = 0.1
         max_dist = 0.5
         # put some settings here for LLM parameter tuning
         target_joint_pos_scale = 0.17    # rad
         target_feet_height = 0.06        # m
         cycle_time = 0.64                # sec
         # if true negative total rewards are clipped at zero (avoids early termination problems)
-        only_positive_rewards = True
+        only_positive_rewards = False
         # tracking reward = exp(error*sigma)
         tracking_sigma = 5
-        max_contact_force = 700  # Forces above this value are penalized
+        max_contact_force = 150000  # Forces above this value are penalized
 
         class scales:
             # reference motion tracking
@@ -223,6 +260,8 @@ class hr_URDF_1023_Cfg(LeggedRobotCfg):
             dof_vel = -5e-4
             dof_acc = -1e-7
             collision = -1.
+            #yaw penalize
+            # leg_yaw = -0.1
 
     class normalization:
         class obs_scales:
@@ -257,7 +296,7 @@ class hr_URDF_1023_PPO(LeggedRobotCfgPPO):
         policy_class_name = 'ActorCritic'
         algorithm_class_name = 'PPO'
         num_steps_per_env = 60  # per iteration
-        max_iterations = 3001  # number of policy updates
+        max_iterations = 6001  # number of policy updates
 
         # logging
         save_interval = 100  # Please check for potential savings every `save_interval` iterations.

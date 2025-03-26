@@ -4,12 +4,12 @@
      For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
 <robot
   name="hr_URDF_1023">
-    <mujoco>
+    <!-- <mujoco>
     <compiler
       meshdir="../meshes/"
     	balanceinertia="true"
     	discardvisual="false" />
-    </mujoco>
+    </mujoco> -->
   <link
     name="body">
     <inertial>
@@ -42,13 +42,21 @@
     </visual>
     <collision>
       <origin
+        xyz="0 0. 0"
+        rpy="0 0 0" />
+      <geometry>
+        <box size="0.4 0.4 0.4"/>
+      </geometry>
+    </collision>
+    <!-- <collision>
+      <origin
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
         <mesh
           filename="../meshes/body.STL" />
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <link
     name="waist">
@@ -80,7 +88,7 @@
           rgba="1 1 1 1" />
       </material>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
@@ -88,11 +96,11 @@
         <mesh
           filename="../meshes/waist.STL" />
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <joint
     name="hip_yaw"
-    type="revolute">
+    type="fixed">
     <origin
       xyz="0 -2.1619E-05 -0.333"
       rpy="0 0 0" />
@@ -105,8 +113,8 @@
     <limit
       lower="-3.14"
       upper="3.14"
-      effort="0"
-      velocity="0" />
+      effort="1000"
+      velocity="1000" />
   </joint>
   <link
     name="hip1l">
@@ -138,7 +146,7 @@
           rgba="1 1 1 1" />
       </material>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
@@ -146,7 +154,7 @@
         <mesh
           filename="../meshes/hip1l.STL" />
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <joint
     name="hip_pitch_l"
@@ -162,9 +170,9 @@
       xyz="0 -1 0" />
     <limit
       lower="-0.7854"
-      upper="1.8326"
-      effort="0"
-      velocity="0" />
+      upper="1.7"
+      effort="1000"
+      velocity="1000" />
   </joint>
   <link
     name="hip2l">
@@ -196,7 +204,7 @@
           rgba="1 1 1 1" />
       </material>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
@@ -204,7 +212,7 @@
         <mesh
           filename="../meshes/hip2l.STL" />
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <joint
     name="hip_roll_l"
@@ -221,8 +229,8 @@
     <limit
       lower="-0.17453"
       upper="0.43633"
-      effort="0"
-      velocity="0" />
+      effort="1000"
+      velocity="1000" />
   </joint>
   <link
     name="hip3l">
@@ -254,7 +262,7 @@
           rgba="1 1 1 1" />
       </material>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
@@ -262,10 +270,10 @@
         <mesh
           filename="../meshes/hip3l.STL" />
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <joint
-    name="knee_yaw_l"
+    name="hip_yaw_l"
     type="revolute">
     <origin
       xyz="0 0 -0.17"
@@ -279,8 +287,8 @@
     <limit
       lower="-0.69813"
       upper="0.69813"
-      effort="0"
-      velocity="0" />
+      effort="1000"
+      velocity="1000" />
   </joint>
   <link
     name="kneel">
@@ -312,7 +320,7 @@
           rgba="1 1 1 1" />
       </material>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
@@ -320,7 +328,7 @@
         <mesh
           filename="../meshes/kneel.STL" />
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <joint
     name="knee_pitch_l"
@@ -335,10 +343,10 @@
     <axis
       xyz="0 -1 0" />
     <limit
-      lower="-2.36"
+      lower="-2"
       upper="0"
-      effort="0"
-      velocity="0" />
+      effort="1000"
+      velocity="1000" />
   </joint>
   <link
     name="anklel">
@@ -370,7 +378,7 @@
           rgba="1 1 1 1" />
       </material>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
@@ -378,7 +386,7 @@
         <mesh
           filename="../meshes/anklel.STL" />
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <joint
     name="ankle_pitch_l"
@@ -395,8 +403,8 @@
     <limit
       lower="-0.43644"
       upper="1.21087"
-      effort="0"
-      velocity="0" />
+      effort="700"
+      velocity="400" />
   </joint>
   <link
     name="feetl">
@@ -453,8 +461,8 @@
     <limit
       lower="-0.43633"
       upper="0.43633"
-      effort="0"
-      velocity="0" />
+      effort="700"
+      velocity="400" />
   </joint>
   <link
     name="hip1r">
@@ -486,7 +494,7 @@
           rgba="1 1 1 1" />
       </material>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
@@ -494,7 +502,7 @@
         <mesh
           filename="../meshes/hip1r.STL" />
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <joint
     name="hip_pitch_r"
@@ -510,9 +518,9 @@
       xyz="0 -1 0" />
     <limit
       lower="-0.7854"
-      upper="1.8326"
-      effort="0"
-      velocity="0" />
+      upper="1.7"
+      effort="1000"
+      velocity="1000" />
   </joint>
   <link
     name="hip2r">
@@ -544,7 +552,7 @@
           rgba="1 1 1 1" />
       </material>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
@@ -552,7 +560,7 @@
         <mesh
           filename="../meshes/hip2r.STL" />
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <joint
     name="hip_roll_r"
@@ -569,8 +577,8 @@
     <limit
       lower="-0.43633"
       upper="0.17453"
-      effort="0"
-      velocity="0" />
+      effort="1000"
+      velocity="1000" />
   </joint>
   <link
     name="hip3r">
@@ -602,7 +610,7 @@
           rgba="1 1 1 1" />
       </material>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
@@ -610,10 +618,10 @@
         <mesh
           filename="../meshes/hip3r.STL" />
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <joint
-    name="knee_yaw_r"
+    name="hip_yaw_r"
     type="revolute">
     <origin
       xyz="0 0 -0.17"
@@ -627,8 +635,8 @@
     <limit
       lower="-0.69813"
       upper="0.69813"
-      effort="0"
-      velocity="0" />
+      effort="1000"
+      velocity="1000" />
   </joint>
   <link
     name="kneer">
@@ -660,7 +668,7 @@
           rgba="1 1 1 1" />
       </material>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
@@ -668,7 +676,7 @@
         <mesh
           filename="../meshes/kneer.STL" />
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <joint
     name="knee_pitch_r"
@@ -683,10 +691,10 @@
     <axis
       xyz="0 -1 0" />
     <limit
-      lower="-2.36"
+      lower="-2"
       upper="0"
-      effort="0"
-      velocity="0" />
+      effort="1000"
+      velocity="1000" />
   </joint>
   <link
     name="ankler">
@@ -718,7 +726,7 @@
           rgba="1 1 1 1" />
       </material>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
@@ -726,7 +734,7 @@
         <mesh
           filename="../meshes/ankler.STL" />
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <joint
     name="ankle_pitch_r"
@@ -743,8 +751,8 @@
     <limit
       lower="-0.43644"
       upper="1.21087"
-      effort="0"
-      velocity="0" />
+      effort="700"
+      velocity="400" />
   </joint>
   <link
     name="feetr">
@@ -801,7 +809,7 @@
     <limit
       lower="-0.43633"
       upper="0.43633"
-      effort="0"
-      velocity="0" />
+      effort="700"
+      velocity="400" />
   </joint>
 </robot>
