@@ -218,12 +218,13 @@ class hr_URDF_1023_Cfg(LeggedRobotCfg):
             heading = [-3.14, 3.14]
 
     class rewards:
-        base_height_target = 1.45
-        min_dist = 0.1
+        base_height_target = 1.35
+        min_dist = 0.2
         max_dist = 0.5
         # put some settings here for LLM parameter tuning
+        # If fail to train, consider lower step height
         target_joint_pos_scale = 0.17    # rad
-        target_feet_height = 0.06        # m
+        target_feet_height = 0.0694        # m
         cycle_time = 0.64                # sec
         # if true negative total rewards are clipped at zero (avoids early termination problems)
         only_positive_rewards = False
@@ -260,8 +261,6 @@ class hr_URDF_1023_Cfg(LeggedRobotCfg):
             dof_vel = -5e-4
             dof_acc = -1e-7
             collision = -1.
-            #yaw penalize
-            # leg_yaw = -0.1
 
     class normalization:
         class obs_scales:

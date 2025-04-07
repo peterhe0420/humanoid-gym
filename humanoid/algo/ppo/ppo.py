@@ -97,7 +97,7 @@ class PPO:
     def act(self, obs, critic_obs):
         # Compute the actions and values
         #sample an action, by giving the actor network an observation obs
-        torch.set_printoptions(threshold=float('inf'))
+        # torch.set_printoptions(threshold=float('inf'))
         # print("obs is:\n")
         # print(obs)
         # print(obs.shape)

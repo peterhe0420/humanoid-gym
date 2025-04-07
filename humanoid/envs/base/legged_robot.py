@@ -68,6 +68,8 @@ class LeggedRobot(BaseTask):
             device_id (int): 0, 1, ...
             headless (bool): Run without rendering if True
         """
+        self.tracked_params = ["base_height_diff", "foot_height_diff"]
+        self.param_diffs = None
         self.cfg = cfg
         self.sim_params = sim_params
         self.height_samples = None
@@ -79,6 +81,7 @@ class LeggedRobot(BaseTask):
             self.set_camera(self.cfg.viewer.pos, self.cfg.viewer.lookat)
         self._init_buffers()
         self._prepare_reward_function()
+        self._prepare_diff_functions()
         self.init_done = True
 
     def step(self, actions):
@@ -144,6 +147,7 @@ class LeggedRobot(BaseTask):
         # compute observations, rewards, resets, ...
         self.check_termination()
         self.compute_reward()
+        self.compute_param_diffs()
         env_ids = self.reset_buf.nonzero(as_tuple=False).flatten()
         self.reset_idx(env_ids)
         self.compute_observations() # in some cases a simulation step might be required to refresh some obs (for example body positions)
@@ -205,6 +209,9 @@ class LeggedRobot(BaseTask):
         for key in self.episode_sums.keys():
             self.extras["episode"]['rew_' + key] = torch.mean(self.episode_sums[key][env_ids]) / self.max_episode_length_s
             self.episode_sums[key][env_ids] = 0.
+        for key in self.param_diffs:
+            self.extras["episode"][key] = torch.mean(self.param_diffs[key][env_ids]) / self.max_episode_length_s
+            self.param_diffs[key][env_ids] = 0.
         # log additional curriculum info
         if self.cfg.terrain.mesh_type == "trimesh":
             self.extras["episode"]["terrain_level"] = torch.mean(self.terrain_levels.float())
@@ -239,6 +246,14 @@ class LeggedRobot(BaseTask):
             rew = self._reward_termination() * self.reward_scales["termination"]
             self.rew_buf += rew
             self.episode_sums["termination"] += rew
+
+    def compute_param_diffs(self):
+
+        for i in range(len(self.param_diffs)):
+            name = self.tracked_params[i]
+            data = self.param_diffs_functions[i]()
+
+            self.param_diffs[name] += data
 
     def set_camera(self, position, lookat):
         """ Set camera position and direction
@@ -565,6 +580,20 @@ class LeggedRobot(BaseTask):
         # reward episode sums
         self.episode_sums = {name: torch.zeros(self.num_envs, dtype=torch.float, device=self.device, requires_grad=False)
                              for name in self.reward_scales.keys()}
+
+    def _prepare_diff_functions(self):
+
+        self.param_diffs_functions = []
+        for key in list(self.tracked_params):
+            name = "_compute_"+key
+            self.param_diffs_functions.append(getattr(self, name))
+
+        # For every param_diff, there is a tensor of size self.num_envs
+        # Later we take the mean of each tensor, and then print this mean to the tensorboard
+        self.param_diffs = {
+            name: torch.zeros(self.num_envs, dtype=torch.float, device=self.device, requires_grad=False)
+            for name in self.tracked_params
+        }
 
     def _create_ground_plane(self):
         """ Adds a ground plane to the simulation, sets friction and restitution based on the cfg.

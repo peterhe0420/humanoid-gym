@@ -75,7 +75,7 @@ class hr_URDF_1023_Env(LeggedRobot):
     '''
     def __init__(self, cfg: LeggedRobotCfg, sim_params, physics_engine, sim_device, headless):
         super().__init__(cfg, sim_params, physics_engine, sim_device, headless)
-        self.last_feet_z = 0.15
+        self.last_feet_z = 0.05
         self.feet_height = torch.zeros((self.num_envs, 2), device=self.device)
         self.reset_idx(torch.tensor(range(self.num_envs), device=self.device))
         self.compute_observations()
@@ -109,6 +109,7 @@ class hr_URDF_1023_Env(LeggedRobot):
         sin_pos = torch.sin(2 * torch.pi * phase)
         # Add double support phase
         stance_mask = torch.zeros((self.num_envs, 2), device=self.device)
+        # Stance foot stance_mask index gets set to 1. If double support phase, both foot indecies gets set to 1
         # left foot stance
         stance_mask[:, 0] = sin_pos >= 0
         # right foot stance
@@ -139,8 +140,14 @@ class hr_URDF_1023_Env(LeggedRobot):
         self.ref_dof_pos[:, 6] = sin_pos_r * scale_1+ self.cfg.init_state.default_joint_angles['hip_pitch_r']
         self.ref_dof_pos[:, 9] = -sin_pos_r * scale_2+ self.cfg.init_state.default_joint_angles['knee_pitch_r']
         self.ref_dof_pos[:, 10] = sin_pos_r * scale_1+ self.cfg.init_state.default_joint_angles['ankle_pitch_r']
-        # Double support phase
-        self.ref_dof_pos[torch.abs(sin_pos) < 0.1] = 0
+        # Double support phase, back to default position
+        self.ref_dof_pos[torch.abs(sin_pos) < 0.1, 0] = self.cfg.init_state.default_joint_angles['hip_pitch_l']  # leg pitch
+        self.ref_dof_pos[torch.abs(sin_pos) < 0.1, 3] = self.cfg.init_state.default_joint_angles['knee_pitch_l']  # knee joint
+        self.ref_dof_pos[torch.abs(sin_pos) < 0.1, 4] = self.cfg.init_state.default_joint_angles['ankle_pitch_l']  # ankle pitch
+
+        self.ref_dof_pos[torch.abs(sin_pos) < 0.1, 6] = self.cfg.init_state.default_joint_angles['hip_pitch_r']
+        self.ref_dof_pos[torch.abs(sin_pos) < 0.1, 9] = self.cfg.init_state.default_joint_angles['knee_pitch_r']
+        self.ref_dof_pos[torch.abs(sin_pos) < 0.1, 10] = self.cfg.init_state.default_joint_angles['ankle_pitch_r']
 
         self.ref_action = 2 * self.ref_dof_pos
 
@@ -376,8 +383,12 @@ class hr_URDF_1023_Env(LeggedRobot):
         on penalizing deviation in yaw and roll directions. Excludes yaw and roll from the main penalty.
         """
         joint_diff = self.dof_pos - self.default_joint_pd_target
-        left_yaw_roll = joint_diff[:, 1:3]
-        right_yaw_roll = joint_diff[:, 7: 9]
+        # left_yaw_roll = joint_diff[:, 1:3]
+        left_yaw_roll = torch.cat([joint_diff[:, 1:3], joint_diff[:, 5].unsqueeze(1)], dim=1)
+
+        # right_yaw_roll = joint_diff[:, 7: 9]
+        right_yaw_roll = torch.cat([joint_diff[:, 7:9], joint_diff[:, 11].unsqueeze(1)], dim=1)
+
         yaw_roll = torch.norm(left_yaw_roll, dim=1) + torch.norm(right_yaw_roll, dim=1)
         yaw_roll = torch.clamp(yaw_roll - 0.1, 0, 50)
         return torch.exp(-yaw_roll * 100) - 0.01 * torch.norm(joint_diff, dim=1)
@@ -554,6 +565,35 @@ class hr_URDF_1023_Env(LeggedRobot):
         term_3 = 0.05 * torch.sum(torch.abs(self.actions), dim=1)
         return term_1 + term_2 + term_3
 
-    # def _reward_leg_yaw(self):
-    #
-    #     return 0
+    def _compute_base_height_diff(self):
+        stance_mask = self._get_gait_phase()
+        #Average of heights of all robots
+        # Pick z of all feet links that is in stance, and then take average(get average stance foot height)
+        measured_heights = torch.sum(
+            self.rigid_state[:, self.feet_indices, 2] * stance_mask, dim=1) / torch.sum(stance_mask, dim=1)
+
+        # Torso height - average stance foot height
+        base_height = self.root_states[:, 2] - (measured_heights - 0.05)
+        return base_height - self.cfg.rewards.base_height_target
+
+# This is very hard to track, so it's better to look at the reward directly
+    # If fails again, look at the reward terms and try again, see how much reward they are getting
+    def _compute_foot_height_diff(self):
+        # Compute feet contact mask, if in contact, that foot's index is 1, else 0
+        contact = self.contact_forces[:, self.feet_indices, 2] > 5.
+
+        # Get the z-position of the feet and compute the change in z-position
+        feet_z = self.rigid_state[:, self.feet_indices, 2] - 0.05
+        delta_z = feet_z - self.last_feet_z
+        self.feet_height += delta_z
+        self.last_feet_z = feet_z
+
+        # Compute swing mask, 1 if foot in swing, 0 if in contact
+        swing_mask = 1 - self._get_gait_phase()
+
+        # feet height should be closed to target feet height at the peak
+        rew_pos = self.feet_height - self.cfg.rewards.target_feet_height
+        # keep only the swing foot height diff
+        rew_pos = torch.sum(rew_pos * swing_mask, dim=1)
+        self.feet_height *= ~contact
+        return rew_pos
