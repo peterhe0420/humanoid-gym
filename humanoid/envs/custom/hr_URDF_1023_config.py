@@ -99,7 +99,7 @@ class hr_URDF_1023_Cfg(LeggedRobotCfg):
 
 ############################Need to make sure accurate##############################
     class init_state(LeggedRobotCfg.init_state):
-        pos = [0.0, 0.0, 1.45]
+        pos = [0.0, 0.0, 1.4]
 
         # default_joint_angles = {  # = target angles [rad] when action = 0.0
         #     # 'hip_yaw': 0.,
@@ -218,7 +218,7 @@ class hr_URDF_1023_Cfg(LeggedRobotCfg):
             heading = [-3.14, 3.14]
 
     class rewards:
-        base_height_target = 1.4
+        base_height_target = 1.35
         min_dist = 0.3
         max_dist = 0.45
         # put some settings here for LLM parameter tuning
@@ -240,8 +240,8 @@ class hr_URDF_1023_Cfg(LeggedRobotCfg):
             # gait
             feet_air_time = 1.
             foot_slip = -0.05
-            feet_distance = 0.2
-            knee_distance = 0.2
+            feet_distance = 0.4
+            knee_distance = 0.4
             # contact
             feet_contact_forces = -0.01
             # vel tracking
