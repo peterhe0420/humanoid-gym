@@ -18,7 +18,7 @@ test_data/
 *.py[cod]
 
 # Log files
-*.log
+#*.log
 
 # Package files
 *.jar
@@ -54,10 +54,10 @@ Thumbs.db
 
 # VS Code
 .vscode
-# logs
-logs
-runs
-videos
+## logs
+#logs
+#runs
+#videos
 # resources
 
 # other
