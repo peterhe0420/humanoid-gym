@@ -219,8 +219,8 @@ class hr_URDF_1023_Cfg(LeggedRobotCfg):
 
     class rewards:
         base_height_target = 1.35
-        min_dist = 0.3
-        max_dist = 0.45
+        min_dist = 0.34
+        max_dist = 0.42
         # put some settings here for LLM parameter tuning
         # If fail to train, consider lower step height
         target_joint_pos_scale = 0.17    # rad
