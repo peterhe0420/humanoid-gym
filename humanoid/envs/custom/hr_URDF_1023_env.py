@@ -75,7 +75,7 @@ class hr_URDF_1023_Env(LeggedRobot):
     '''
     def __init__(self, cfg: LeggedRobotCfg, sim_params, physics_engine, sim_device, headless):
         super().__init__(cfg, sim_params, physics_engine, sim_device, headless)
-        self.last_feet_z = 0.085
+        self.last_feet_z = 0.073
         self.feet_height = torch.zeros((self.num_envs, 2), device=self.device)
         self.reset_idx(torch.tensor(range(self.num_envs), device=self.device))
         self.compute_observations()
@@ -406,7 +406,7 @@ class hr_URDF_1023_Env(LeggedRobot):
             self.rigid_state[:, self.feet_indices, 2] * stance_mask, dim=1) / torch.sum(stance_mask, dim=1)
         # print(self.feet_indices)
         # print("\n\n\n\n\n\n")
-        base_height = self.root_states[:, 2] - (measured_heights - 0.085)
+        base_height = self.root_states[:, 2] - (measured_heights - 0.073)
         return torch.exp(-torch.abs(base_height - self.cfg.rewards.base_height_target) * 100)
 
     def _reward_base_acc(self):
@@ -478,7 +478,7 @@ class hr_URDF_1023_Env(LeggedRobot):
         contact = self.contact_forces[:, self.feet_indices, 2] > 5.
 
         # Get the z-position of the feet and compute the change in z-position
-        feet_z = self.rigid_state[:, self.feet_indices, 2] - 0.085
+        feet_z = self.rigid_state[:, self.feet_indices, 2] - 0.073
         delta_z = feet_z - self.last_feet_z
         self.feet_height += delta_z
         self.last_feet_z = feet_z
@@ -573,7 +573,7 @@ class hr_URDF_1023_Env(LeggedRobot):
             self.rigid_state[:, self.feet_indices, 2] * stance_mask, dim=1) / torch.sum(stance_mask, dim=1)
 
         # Torso height - average stance foot height
-        base_height = self.root_states[:, 2] - (measured_heights - 0.085)
+        base_height = self.root_states[:, 2] - (measured_heights - 0.073)
         return base_height - self.cfg.rewards.base_height_target
 
 # This is very hard to track, so it's better to look at the reward directly
@@ -583,7 +583,7 @@ class hr_URDF_1023_Env(LeggedRobot):
         contact = self.contact_forces[:, self.feet_indices, 2] > 5.
 
         # Get the z-position of the feet and compute the change in z-position
-        feet_z = self.rigid_state[:, self.feet_indices, 2] - 0.085
+        feet_z = self.rigid_state[:, self.feet_indices, 2] - 0.073
         delta_z = feet_z - self.last_feet_z
         self.feet_height += delta_z
         self.last_feet_z = feet_z

@@ -48,7 +48,7 @@ comRef = pinocchio.centerOfMass(rmodel, rdata, q0)
 
 #print(1)
 
-initialAngle = np.array([0.38, 0., 0, -0.85, 0.42, 0, 0.38, 0., 0., -0.85, 0.42, 0])
+initialAngle = np.array([0.525, 0., 0, -1.073, 0.557, 0, 0.525, 0., 0., -1.073, 0.557, 0])
 q0 = pinocchio.utils.zero(rrobot.model.nq)
 q0[6] = 1  # q.w
 q0[2] =0.5848  # z
@@ -72,7 +72,7 @@ for i in range(5000):
     sin_pos_r = sin_pos.copy()
 
     ref_dof_pos = np.zeros((1,12))
-    scale_1 = 0.17
+    scale_1 = 0.2
     scale_2 = 2 * scale_1
     # left foot stance phase set to default joint pos
     if sin_pos_l > 0 :

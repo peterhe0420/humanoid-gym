@@ -17,14 +17,15 @@
         xyz="0.0017699 -0.00049125 -0.091608"
         rpy="0 0 0" />
       <mass
-        value="10.6588" />
+        value="2.6588" />
       <inertia
-        ixx="0.79349"
-        ixy="-6.8856E-05"
-        ixz="0.0024924"
-        iyy="0.47407"
-        iyz="9.4071E-04"
-        izz="0.42063" />
+        ixx="0.079349"
+        ixy="-6.8856E-06"
+        ixz="0.00024924"
+        iyy="0.047407"
+        iyz="9.4071E-05"
+        izz="0.042063"/>
+        
     </inertial>
     <visual>
       <origin
@@ -113,8 +114,8 @@
     <limit
       lower="-3.14"
       upper="3.14"
-      effort="1000"
-      velocity="1000" />
+      effort="9999999"
+      velocity="9999999" />
   </joint>
   <link
     name="hip1l">
@@ -171,8 +172,8 @@
     <limit
       lower="-0.7854"
       upper="1.7"
-      effort="1000"
-      velocity="1000" />
+      effort="9999999"
+      velocity="9999999" />
   </joint>
   <link
     name="hip2l">
@@ -229,8 +230,8 @@
     <limit
       lower="-0.17453"
       upper="0.43633"
-      effort="1000"
-      velocity="1000" />
+      effort="9999999"
+      velocity="9999999" />
   </joint>
   <link
     name="hip3l">
@@ -287,8 +288,8 @@
     <limit
       lower="-0.69813"
       upper="0.69813"
-      effort="1000"
-      velocity="1000" />
+      effort="9999999"
+      velocity="9999999" />
   </joint>
   <link
     name="kneel">
@@ -345,8 +346,8 @@
     <limit
       lower="-2"
       upper="0"
-      effort="1000"
-      velocity="1000" />
+      effort="9999999"
+      velocity="9999999" />
   </joint>
   <link
     name="anklel">
@@ -403,8 +404,8 @@
     <limit
       lower="-0.43644"
       upper="1.21087"
-      effort="700"
-      velocity="400" />
+      effort="9999999"
+      velocity="9999999" />
   </joint>
   <link
     name="feetl">
@@ -461,8 +462,8 @@
     <limit
       lower="-0.43633"
       upper="0.43633"
-      effort="700"
-      velocity="400" />
+      effort="9999999"
+      velocity="9999999" />
   </joint>
   <link
     name="hip1r">
@@ -519,8 +520,8 @@
     <limit
       lower="-0.7854"
       upper="1.7"
-      effort="1000"
-      velocity="1000" />
+      effort="9999999"
+      velocity="9999999" />
   </joint>
   <link
     name="hip2r">
@@ -577,8 +578,8 @@
     <limit
       lower="-0.43633"
       upper="0.17453"
-      effort="1000"
-      velocity="1000" />
+      effort="9999999"
+      velocity="9999999" />
   </joint>
   <link
     name="hip3r">
@@ -635,8 +636,8 @@
     <limit
       lower="-0.69813"
       upper="0.69813"
-      effort="1000"
-      velocity="1000" />
+      effort="9999999"
+      velocity="9999999" />
   </joint>
   <link
     name="kneer">
@@ -693,8 +694,8 @@
     <limit
       lower="-2"
       upper="0"
-      effort="1000"
-      velocity="1000" />
+      effort="9999999"
+      velocity="9999999" />
   </joint>
   <link
     name="ankler">
@@ -751,8 +752,8 @@
     <limit
       lower="-0.43644"
       upper="1.21087"
-      effort="700"
-      velocity="400" />
+      effort="9999999"
+      velocity="9999999" />
   </joint>
   <link
     name="feetr">
@@ -809,7 +810,7 @@
     <limit
       lower="-0.43633"
       upper="0.43633"
-      effort="700"
-      velocity="400" />
+      effort="9999999"
+      velocity="9999999" />
   </joint>
 </robot>
