@@ -75,7 +75,7 @@ class hr_URDF_1023_Env(LeggedRobot):
     '''
     def __init__(self, cfg: LeggedRobotCfg, sim_params, physics_engine, sim_device, headless):
         super().__init__(cfg, sim_params, physics_engine, sim_device, headless)
-        self.last_feet_z = 0.073
+        self.last_feet_z = 0.075
         self.feet_height = torch.zeros((self.num_envs, 2), device=self.device)
         self.reset_idx(torch.tensor(range(self.num_envs), device=self.device))
         self.compute_observations()
@@ -406,7 +406,7 @@ class hr_URDF_1023_Env(LeggedRobot):
             self.rigid_state[:, self.feet_indices, 2] * stance_mask, dim=1) / torch.sum(stance_mask, dim=1)
         # print(self.feet_indices)
         # print("\n\n\n\n\n\n")
-        base_height = self.root_states[:, 2] - (measured_heights - 0.073)
+        base_height = self.root_states[:, 2] - (measured_heights - 0.075)
         return torch.exp(-torch.abs(base_height - self.cfg.rewards.base_height_target) * 100)
 
     def _reward_base_acc(self):
@@ -478,7 +478,7 @@ class hr_URDF_1023_Env(LeggedRobot):
         contact = self.contact_forces[:, self.feet_indices, 2] > 5.
 
         # Get the z-position of the feet and compute the change in z-position
-        feet_z = self.rigid_state[:, self.feet_indices, 2] - 0.073
+        feet_z = self.rigid_state[:, self.feet_indices, 2] - 0.075
         delta_z = feet_z - self.last_feet_z
         self.feet_height += delta_z
         self.last_feet_z = feet_z
@@ -487,7 +487,7 @@ class hr_URDF_1023_Env(LeggedRobot):
         swing_mask = 1 - self._get_gait_phase()
 
         # feet height should be closed to target feet height at the peak
-        rew_pos = torch.abs(self.feet_height - self.cfg.rewards.target_feet_height) < 0.01
+        rew_pos = torch.abs(self.feet_height - self.cfg.rewards.target_feet_height) < 0.02
         rew_pos = torch.sum(rew_pos * swing_mask, dim=1)
         self.feet_height *= ~contact
         return rew_pos
@@ -573,7 +573,7 @@ class hr_URDF_1023_Env(LeggedRobot):
             self.rigid_state[:, self.feet_indices, 2] * stance_mask, dim=1) / torch.sum(stance_mask, dim=1)
 
         # Torso height - average stance foot height
-        base_height = self.root_states[:, 2] - (measured_heights - 0.073)
+        base_height = self.root_states[:, 2] - (measured_heights - 0.075)
         return base_height - self.cfg.rewards.base_height_target
 
 # This is very hard to track, so it's better to look at the reward directly
@@ -583,7 +583,7 @@ class hr_URDF_1023_Env(LeggedRobot):
         contact = self.contact_forces[:, self.feet_indices, 2] > 5.
 
         # Get the z-position of the feet and compute the change in z-position
-        feet_z = self.rigid_state[:, self.feet_indices, 2] - 0.073
+        feet_z = self.rigid_state[:, self.feet_indices, 2] - 0.075
         delta_z = feet_z - self.last_feet_z
         self.feet_height += delta_z
         self.last_feet_z = feet_z

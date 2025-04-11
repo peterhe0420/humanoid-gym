@@ -99,7 +99,7 @@ class hr_URDF_1023_Cfg(LeggedRobotCfg):
 
 ############################Need to make sure accurate##############################
     class init_state(LeggedRobotCfg.init_state):
-        pos = [0.0, 0.0, 1.4]
+        pos = [0.0, 0.0, 1.35]
 
         # default_joint_angles = {  # = target angles [rad] when action = 0.0
         #     # 'hip_yaw': 0.,
@@ -121,18 +121,18 @@ class hr_URDF_1023_Cfg(LeggedRobotCfg):
         default_joint_angles = {  # = target angles [rad] when action = 0.0
             # 'hip_yaw': 0.,
 
-            'hip_pitch_l': 0.525,
+            'hip_pitch_l': 0.504,
             'hip_roll_l': 0.,
             'hip_yaw_l': 0.,
-            'knee_pitch_l': -1.073,
-            'ankle_pitch_l': 0.557,
+            'knee_pitch_l': -1.133,
+            'ankle_pitch_l': 0.623,
             'ankle_roll_l': 0.,
 
-            'hip_pitch_r': 0.525,
+            'hip_pitch_r': 0.504,
             'hip_roll_r': 0.,
             'hip_yaw_r': 0.,
-            'knee_pitch_r': -1.073,
-            'ankle_pitch_r': 0.557,
+            'knee_pitch_r': -1.133,
+            'ankle_pitch_r': 0.623,
             'ankle_roll_r': 0.,
         }
         # default_joint_angles = {  # = target angles [rad] when action = 0.0
@@ -218,13 +218,13 @@ class hr_URDF_1023_Cfg(LeggedRobotCfg):
             heading = [-3.14, 3.14]
 
     class rewards:
-        base_height_target = 1.23
+        base_height_target = 1.22
         min_dist = 0.3
         max_dist = 0.45
         # put some settings here for LLM parameter tuning
         # If fail to train, consider lower step height
-        target_joint_pos_scale = 0.2    # rad
-        target_feet_height = 0.1        # m
+        target_joint_pos_scale = 0.17    # rad
+        target_feet_height = 0.0848        # m
         cycle_time = 0.64                # sec
         # if true negative total rewards are clipped at zero (avoids early termination problems)
         only_positive_rewards = False
@@ -235,7 +235,7 @@ class hr_URDF_1023_Cfg(LeggedRobotCfg):
         class scales:
             # reference motion tracking
             joint_pos = 1.6
-            feet_clearance = 1.
+            feet_clearance = 0
             feet_contact_number = 1.2
             # gait
             feet_air_time = 1.
