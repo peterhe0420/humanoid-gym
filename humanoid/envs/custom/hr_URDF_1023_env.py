@@ -141,13 +141,13 @@ class hr_URDF_1023_Env(LeggedRobot):
         self.ref_dof_pos[:, 9] = -sin_pos_r * scale_2+ self.cfg.init_state.default_joint_angles['knee_pitch_r']
         self.ref_dof_pos[:, 10] = sin_pos_r * scale_1+ self.cfg.init_state.default_joint_angles['ankle_pitch_r']
         # Double support phase, back to default position
-        self.ref_dof_pos[torch.abs(sin_pos) < 0.1, 0] = self.cfg.init_state.default_joint_angles['hip_pitch_l']  # leg pitch
-        self.ref_dof_pos[torch.abs(sin_pos) < 0.1, 3] = self.cfg.init_state.default_joint_angles['knee_pitch_l']  # knee joint
-        self.ref_dof_pos[torch.abs(sin_pos) < 0.1, 4] = self.cfg.init_state.default_joint_angles['ankle_pitch_l']  # ankle pitch
-
-        self.ref_dof_pos[torch.abs(sin_pos) < 0.1, 6] = self.cfg.init_state.default_joint_angles['hip_pitch_r']
-        self.ref_dof_pos[torch.abs(sin_pos) < 0.1, 9] = self.cfg.init_state.default_joint_angles['knee_pitch_r']
-        self.ref_dof_pos[torch.abs(sin_pos) < 0.1, 10] = self.cfg.init_state.default_joint_angles['ankle_pitch_r']
+        # self.ref_dof_pos[torch.abs(sin_pos) < 0.1, 0] = self.cfg.init_state.default_joint_angles['hip_pitch_l']  # leg pitch
+        # self.ref_dof_pos[torch.abs(sin_pos) < 0.1, 3] = self.cfg.init_state.default_joint_angles['knee_pitch_l']  # knee joint
+        # self.ref_dof_pos[torch.abs(sin_pos) < 0.1, 4] = self.cfg.init_state.default_joint_angles['ankle_pitch_l']  # ankle pitch
+        #
+        # self.ref_dof_pos[torch.abs(sin_pos) < 0.1, 6] = self.cfg.init_state.default_joint_angles['hip_pitch_r']
+        # self.ref_dof_pos[torch.abs(sin_pos) < 0.1, 9] = self.cfg.init_state.default_joint_angles['knee_pitch_r']
+        # self.ref_dof_pos[torch.abs(sin_pos) < 0.1, 10] = self.cfg.init_state.default_joint_angles['ankle_pitch_r']
 
         self.ref_action = 2 * self.ref_dof_pos
 

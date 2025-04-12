@@ -225,7 +225,7 @@ class hr_URDF_1023_Cfg(LeggedRobotCfg):
         # If fail to train, consider lower step height
         target_joint_pos_scale = 0.17    # rad
         target_feet_height = 0.0848        # m
-        cycle_time = 0.64                # sec
+        cycle_time = 0.4                # sec
         # if true negative total rewards are clipped at zero (avoids early termination problems)
         only_positive_rewards = False
         # tracking reward = exp(error*sigma)
@@ -235,7 +235,7 @@ class hr_URDF_1023_Cfg(LeggedRobotCfg):
         class scales:
             # reference motion tracking
             joint_pos = 1.6
-            feet_clearance = 0
+            feet_clearance = 1.0
             feet_contact_number = 1.2
             # gait
             feet_air_time = 1.
